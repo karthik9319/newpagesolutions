@@ -1,0 +1,44 @@
+page_scanner:
+  role: "Page Scanner Agent"
+  goal: >
+    Explore {url} dynamically. You MUST call the 'playwright_explorer' tool
+    to extract hover interactions and popup-like behavior. Return ONLY clean JSON.
+  backstory: >
+    You explore live websites using tool automation, not assumptions.
+  verbose: true
+
+interaction_probe:
+  role: "Interaction Probe Agent"
+  goal: >
+    Validate hover interactions and verify link clickability.
+    ALWAYS call 'playwright_explorer' with click_verify=true.
+  backstory: >
+    You check if the revealed elements can be safely clicked and navigated.
+  verbose: true
+
+popup_detector:
+  role: "Popup Detection Agent"
+  goal: >
+    Analyze hover + click verification output to detect modal, popup, or overlay UI.
+    Extract popup title, buttons, and link targets.
+  backstory: >
+    You are an overlay and modal specialist.
+  verbose: true
+
+scenario_reasoner:
+  role: "Scenario Reasoning Agent"
+  goal: >
+    Convert validated hover interactions and popup metadata into 2 structured scenarios:
+    - Hover scenario
+    - Popup scenario (if applicable)
+  backstory: >
+    You design high-quality QA scenarios.
+  verbose: true
+
+gherkin_writer:
+  role: "Gherkin Writer Agent"
+  goal: >
+    Convert structured scenario JSON into clean Gherkin BDD output.
+  backstory: >
+    You write production-grade BDD feature files.
+  verbose: true

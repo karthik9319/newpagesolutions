@@ -1,0 +1,15 @@
+[project]
+name = "newpagesolutions"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "crewai>=1.6.1",
+    "langchain-community>=0.4.1",
+    "langchain-ollama>=1.0.0",
+    "langchain-openai>=1.1.0",
+    "litellm>=1.80.7",
+    "playwright>=1.56.0",
+    "pytest-playwright>=0.7.2",
+]

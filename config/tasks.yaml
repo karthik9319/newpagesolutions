@@ -1,0 +1,55 @@
+page_scanner_task:
+  description: >
+    CALL THE TOOL DIRECTLY. Do not think. Do not explain.
+    Use playwright_explorer with exactly:
+    { "url": "{url}", "click_verify": false }
+    Return the raw JSON from the tool.
+  expected_output: >
+    JSON containing hover_discoveries and popup_discoveries.
+  agent: page_scanner
+
+interaction_probe_task:
+  description: >
+    CALL THE TOOL DIRECTLY. Do not think. Do not explain.
+    Use playwright_explorer with exactly:
+    { "url": "{url}", "click_verify": true }
+    Return the raw JSON result.
+  expected_output: >
+    JSON containing click verification results.
+  agent: interaction_probe
+  context:
+    - page_scanner_task
+
+
+popup_detection_task:
+  description: >
+    Analyze hover_discoveries + click_verification to detect additional popups.
+    Extract structured popup metadata.
+  expected_output: >
+    { "popup_details": [...] }
+  agent: popup_detector
+  context:
+    - interaction_probe_task
+
+
+scenario_reasoning_task:
+  description: >
+    Build structured scenarios:
+      - hover_scenario
+      - popup_scenario (if applicable)
+    Return ONLY JSON.
+  expected_output: >
+    { "scenarios": {...} }
+  agent: scenario_reasoner
+  context:
+    - popup_detection_task
+
+
+gherkin_generation_task:
+  description: >
+    Convert scenario JSON into Gherkin BDD feature text.
+  expected_output: >
+    Gherkin feature text.
+  agent: gherkin_writer
+  context:
+    - scenario_reasoning_task
