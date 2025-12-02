@@ -2,7 +2,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.12-blue)](#)  [![License: MIT](https://img.shields.io/badge/License-MIT-green)](#)
 
-## 🔎 What is this
+## What is this
 
 This project generates UI interaction scenarios (e.g. hover menus, popups, overlays) — expressed as BDD-style Gherkin feature files — from a given website URL.  
 It uses:
@@ -13,7 +13,7 @@ It uses:
 
 This lets you quickly generate test-scenario specs for any website — useful for QA, automation, or documentation workflows.
 
-## 🚀 Features
+## Features
 
 - Accept URL via UI and run analysis in background.  
 - Display results as formatted Gherkin `.feature` text or raw output.  
