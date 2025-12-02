@@ -22,7 +22,7 @@ This lets you quickly generate test-scenario specs for any website — useful fo
 
 ## Demo
 
-![here](demo/video.mp4)
+![here](demo.gif)
 
 ## Setup
 
