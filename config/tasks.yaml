@@ -1,55 +1,50 @@
 page_scanner_task:
   description: >
-    CALL THE TOOL DIRECTLY. Do not think. Do not explain.
-    Use playwright_explorer with exactly:
-    { "url": "{url}", "click_verify": false }
-    Return the raw JSON from the tool.
+    Extract ONLY actual HTML elements from the page. Identify probable interactive
+    components (links, buttons, menu items). Do not fabricate HTML. If unsure,
+    list elements as “uncertain interaction candidates”.
   expected_output: >
-    JSON containing hover_discoveries and popup_discoveries.
+    JSON containing a list: { "candidates": [...] }
   agent: page_scanner
 
-interaction_probe_task:
+interaction_analyzer_task:
   description: >
-    CALL THE TOOL DIRECTLY. Do not think. Do not explain.
-    Use playwright_explorer with exactly:
-    { "url": "{url}", "click_verify": true }
-    Return the raw JSON result.
+    For each candidate:
+    - analyze real attributes
+    - infer interaction possibilities conservatively
+    - avoid claiming behaviors not supported by HTML
   expected_output: >
-    JSON containing click verification results.
-  agent: interaction_probe
+    JSON: { "predicted_interactions": [...] }
+  agent: interaction_analyzer
   context:
     - page_scanner_task
 
-
-popup_detection_task:
+popup_detector_task:
   description: >
-    Analyze hover_discoveries + click_verification to detect additional popups.
-    Extract structured popup metadata.
+    Detect popups ONLY if HTML contains actual modal/dialog/overlay markup.
+    Otherwise output an empty list.
   expected_output: >
-    { "popup_details": [...] }
+    JSON: { "predicted_popups": [...] }
   agent: popup_detector
   context:
-    - interaction_probe_task
+    - interaction_analyzer_task
 
-
-scenario_reasoning_task:
+scenario_reasoner_task:
   description: >
-    Build structured scenarios:
-      - hover_scenario
-      - popup_scenario (if applicable)
-    Return ONLY JSON.
+    Build scenarios ONLY from grounded interactions.
+    Produce generic steps when specificity is impossible.
   expected_output: >
-    { "scenarios": {...} }
+    JSON: { "scenarios": [...] }
   agent: scenario_reasoner
   context:
-    - popup_detection_task
-
+    - popup_detector_task
 
 gherkin_generation_task:
   description: >
-    Convert scenario JSON into Gherkin BDD feature text.
+    Convert scenario JSON to strict Gherkin.
+    Steps must sound human-like but grounded.
   expected_output: >
     Gherkin feature text.
   agent: gherkin_writer
   context:
-    - scenario_reasoning_task
+    - scenario_reasoner_task
